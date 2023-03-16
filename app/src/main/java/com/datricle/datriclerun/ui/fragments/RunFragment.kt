@@ -6,12 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.datricle.datriclerun.R
 import com.datricle.datriclerun.adapters.RunAdapter
 import com.datricle.datriclerun.databinding.FragmentRunBinding
@@ -20,9 +23,12 @@ import com.datricle.datriclerun.others.Constants.REQUEST_CODE_LOCATION_PERMISSIO
 import com.datricle.datriclerun.others.SortType
 import com.datricle.datriclerun.others.TrackingUtilities
 import com.datricle.datriclerun.ui.viewmodals.MainViewModal
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.vmadalin.easypermissions.EasyPermissions
 import com.vmadalin.easypermissions.dialogs.SettingsDialog
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.util.*
 
 @AndroidEntryPoint
 class RunFragment : Fragment(R.layout.fragment_run), EasyPermissions.PermissionCallbacks {
@@ -75,9 +81,9 @@ class RunFragment : Fragment(R.layout.fragment_run), EasyPermissions.PermissionC
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
-        viewModal.runs.observe(viewLifecycleOwner,{
+        viewModal.runs.observe(viewLifecycleOwner) {
             runAdapter.submitList(it)
-        })
+        }
         binding.fab.setOnClickListener {
             findNavController().navigate(R.id.action_runFragment_to_trackingFragment)
         }
@@ -88,6 +94,40 @@ class RunFragment : Fragment(R.layout.fragment_run), EasyPermissions.PermissionC
         runAdapter = RunAdapter()
         adapter = runAdapter
         layoutManager = LinearLayoutManager(requireContext())
+        runAdapter.onItemClick={
+            val dialog = BottomSheetDialog(context)
+
+            val view = layoutInflater.inflate(R.layout.run_item_bottomsheet, null)
+            val imgView = view.findViewById<ImageView>(R.id.ivRunImageRun)
+            val dateView = view.findViewById<TextView>(R.id.tvDateRun)
+            val timeView = view.findViewById<TextView>(R.id.tvTimeRun)
+            val distanceView = view.findViewById<TextView>(R.id.tvDistanceRun)
+            val avgSpeedView = view.findViewById<TextView>(R.id.tvAvgSpeedRun)
+            val kcalView = view.findViewById<TextView>(R.id.tvCaloriesRun)
+            Glide.with(this).load(it.img).into(imgView)
+            val calendar = Calendar.getInstance().apply {
+                timeInMillis = it.timestamp
+            }
+            val dateFormat = SimpleDateFormat("dd.MM.yy", Locale.getDefault())
+            dateView.text = "Date\n${dateFormat.format(calendar.time)}"
+
+            val avgSpeed = "${it.avgSpeedInKMH} km/h"
+            avgSpeedView.text = "Avg Speed\n$avgSpeed"
+
+            val distanceInKm = "${it.distanceOnMeters / 1000f}"
+            distanceView.text = "Distance\n$distanceInKm"
+
+            timeView.text = "Time\n${TrackingUtilities.getFormattedStopWatchTime(it.timeInMillis)}"
+
+            val caloriesBurned = "${it.caloriesBurned} kcal"
+            kcalView.text = "Kcal\n$caloriesBurned"
+
+            dialog.setCancelable(true)
+            dialog.setCanceledOnTouchOutside(true)
+            dialog.setContentView(view)
+            dialog.show()
+            Toast.makeText(context, "Item clicked ", Toast.LENGTH_SHORT).show()
+        }
     }
 
     /*private fun requestPermissions() {

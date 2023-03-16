@@ -2,21 +2,23 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="12dp"
     app:cardCornerRadius="25dp"
-    app:cardElevation="15dp"
-    android:layout_margin="8dp"
-    android:layout_height="wrap_content">
+    app:cardElevation="15dp">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp">
+        android:padding="10dp">
 
         <ImageView
             android:id="@+id/ivRunImage"
             android:layout_width="match_parent"
             android:layout_height="200dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_launcher_foreground"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -24,11 +26,12 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tvDate"
+            style="@style/TextViewStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="DATE"
-            style="@style/TextViewStyle"
+            android:textAlignment="center"
             app:layout_constraintEnd_toStartOf="@+id/tvTime"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -36,11 +39,12 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tvTime"
+            style="@style/TextViewStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="TIME"
-            style="@style/TextViewStyle"
+            android:textAlignment="center"
             app:layout_constraintEnd_toStartOf="@+id/tvDistance"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/tvDate"
@@ -48,11 +52,12 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tvDistance"
+            style="@style/TextViewStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="DISTANCE"
-            style="@style/TextViewStyle"
+            android:textAlignment="center"
             app:layout_constraintEnd_toStartOf="@+id/tvAvgSpeed"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/tvTime"
@@ -60,11 +65,12 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tvAvgSpeed"
+            style="@style/TextViewStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:textAlignment="center"
             android:text="AVGSPEED"
-            style="@style/TextViewStyle"
             app:layout_constraintEnd_toStartOf="@+id/tvCalories"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/tvDistance"
@@ -72,11 +78,12 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tvCalories"
+            style="@style/TextViewStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:textAlignment="center"
             android:text="CALORIES"
-            style="@style/TextViewStyle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/tvAvgSpeed"

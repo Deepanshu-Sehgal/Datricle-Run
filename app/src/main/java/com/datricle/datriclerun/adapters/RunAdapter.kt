@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class RunAdapter : RecyclerView.Adapter<RunAdapter.RunViewHolder>() {
+    var onItemClick : ((Run) -> Unit)? = null
     inner class RunViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     val diffCallback = object : DiffUtil.ItemCallback<Run>() {
@@ -54,18 +55,21 @@ class RunAdapter : RecyclerView.Adapter<RunAdapter.RunViewHolder>() {
                 timeInMillis = run.timestamp
             }
             val dateFormat = SimpleDateFormat("dd.MM.yy", Locale.getDefault())
-            dateTv.text = dateFormat.format(calendar.time)
+            dateTv.text = "Date\n${dateFormat.format(calendar.time)}"
 
             val avgSpeed = "${run.avgSpeedInKMH} km/h"
-            avgSpeedTv.text = avgSpeed
+            avgSpeedTv.text = "Avg Speed\n$avgSpeed"
 
             val distanceInKm = "${run.distanceOnMeters / 1000f}"
-            distanceTv.text = distanceInKm
+            distanceTv.text = "Distance\n$distanceInKm"
 
-            timeTv.text = TrackingUtilities.getFormattedStopWatchTime(run.timeInMillis)
+            timeTv.text = "Time\n${TrackingUtilities.getFormattedStopWatchTime(run.timeInMillis)}"
 
             val caloriesBurned = "${run.caloriesBurned} kcal"
-            caloriesTv.text = caloriesBurned
+            caloriesTv.text = "Kcal\n$caloriesBurned"
+        }
+        holder.itemView.setOnClickListener {
+            onItemClick?.invoke(run)
 
         }
     }
