@@ -126,7 +126,6 @@ class RunFragment : Fragment(R.layout.fragment_run), EasyPermissions.PermissionC
             dialog.setCanceledOnTouchOutside(true)
             dialog.setContentView(view)
             dialog.show()
-            Toast.makeText(context, "Item clicked ", Toast.LENGTH_SHORT).show()
         }
     }
 
