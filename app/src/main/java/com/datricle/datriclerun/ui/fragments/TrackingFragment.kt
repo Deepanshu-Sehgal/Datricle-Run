@@ -84,21 +84,21 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
     }
 
     private fun subscribeToObserves() {
-        TrackingService.isTracking.observe(viewLifecycleOwner, {
+        TrackingService.isTracking.observe(viewLifecycleOwner) {
             updateTracking(it)
-        })
+        }
 
-        TrackingService.pathPoints.observe(viewLifecycleOwner, {
+        TrackingService.pathPoints.observe(viewLifecycleOwner) {
             pathPoints = it
             addLatestPolyline()
             moveCameraToUser()
-        })
+        }
 
-        TrackingService.timeRunInMillie.observe(viewLifecycleOwner, {
+        TrackingService.timeRunInMillie.observe(viewLifecycleOwner) {
             curTimeMillis = it
             val formattedTime = TrackingUtilities.getFormattedStopWatchTime(curTimeMillis, true)
             binding.tvTimer.text = formattedTime
-        })
+        }
     }
 
 

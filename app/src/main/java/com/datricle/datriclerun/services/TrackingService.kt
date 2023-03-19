@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_LOW
 import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_MUTABLE
 import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Context
 import android.content.Intent
@@ -28,11 +29,8 @@ import com.datricle.datriclerun.others.Constants.NOTIFICATION_CHANNEL_NAME
 import com.datricle.datriclerun.others.Constants.NOTIFICATION_Id
 import com.datricle.datriclerun.others.Constants.TIMER_UPDATE_INTERVAL
 import com.datricle.datriclerun.others.TrackingUtilities
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.*
 import com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
-import com.google.android.gms.location.LocationResult
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -76,12 +74,11 @@ class TrackingService : LifecycleService() {
         timeRunInMillie.postValue(0L)
     }
 
-    @SuppressLint("VisibleForTests")
     override fun onCreate() {
         super.onCreate()
         curNotificationBuilder = baseNotificationBuilder
         postInitializeValues()
-        fusedLocationProviderClient = FusedLocationProviderClient(this)
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         isTracking.observe(this, Observer {
             updateLocationTracking(it)
             updateNotificationTrackingState(it)
@@ -163,12 +160,12 @@ class TrackingService : LifecycleService() {
             val pauseIntent = Intent(this, TrackingService::class.java).apply {
                 action = ACTION_PAUSE_SERVICE
             }
-            PendingIntent.getService(this, 1, pauseIntent, FLAG_UPDATE_CURRENT)
+            PendingIntent.getService(this, 1, pauseIntent, FLAG_MUTABLE)
         } else {
             val resumeIntent = Intent(this, TrackingService::class.java).apply {
                 action = ACTION_START_OR_RESUME_SERVICE
             }
-            PendingIntent.getService(this, 2, resumeIntent, FLAG_UPDATE_CURRENT)
+            PendingIntent.getService(this, 2, resumeIntent, FLAG_MUTABLE)
         }
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

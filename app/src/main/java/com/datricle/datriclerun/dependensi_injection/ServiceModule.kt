@@ -1,13 +1,16 @@
 package com.datricle.datriclerun.dependensi_injection
 
 import android.app.PendingIntent
+import android.app.PendingIntent.getActivity
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.datricle.datriclerun.R
 import com.datricle.datriclerun.others.Constants
 import com.datricle.datriclerun.ui.MainActivity
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,20 +25,31 @@ object ServiceModule {
     @ServiceScoped
     @Provides
     fun provideFusedLocationProviderClient(@ApplicationContext app: Context) =
-        FusedLocationProviderClient(app)
+        LocationServices.getFusedLocationProviderClient(app)
 
 
     @ServiceScoped
     @Provides
-    fun provideMainActivityPendingIntent(@ApplicationContext app: Context) =
-        PendingIntent.getActivity(
-            app,
-            0,
-            Intent(app, MainActivity::class.java).also {
-                it.action = Constants.ACTION_SHOW_TRACKING_FRAGMENT
-            },
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
+    fun provideMainActivityPendingIntent(@ApplicationContext app: Context): PendingIntent =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            getActivity(
+                app,
+                0,
+                Intent(app, MainActivity::class.java).also {
+                    it.action = Constants.ACTION_SHOW_TRACKING_FRAGMENT
+                },
+                PendingIntent.FLAG_MUTABLE
+            )
+        } else {
+            getActivity(
+                app,
+                0,
+                Intent(app, MainActivity::class.java).also {
+                    it.action = Constants.ACTION_SHOW_TRACKING_FRAGMENT
+                },
+                PendingIntent.FLAG_IMMUTABLE
+            )
+        }
 
     @ServiceScoped
     @Provides
